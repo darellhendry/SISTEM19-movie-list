@@ -78,9 +78,7 @@ function onError(error) {
       throw error;
   }
 }
-app.get('*', (req, res) => {
- res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
+
 /**
  * Event listener for HTTP server "listening" event.
  */
