@@ -4,7 +4,7 @@ var path = require('path');
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'client2/build')));
 
 
 
@@ -17,7 +17,7 @@ app.get('/users', function(req, res, next) {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/static/index.html'));
+  res.sendFile(path.join(__dirname+'/client2/build/static/index.html'));
 });
 
 const port = process.env.PORT || 5000;
