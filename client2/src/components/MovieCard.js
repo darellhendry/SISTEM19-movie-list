@@ -1,43 +1,99 @@
 import React from 'react'
-import { Grid, Typography, CardContent, CardMedia, Card, CardActionArea, CardActions, Fab, Icon } from '@material-ui/core'
+import { Grow, Grid, Typography, CardContent, CardMedia, Card, CardActionArea, CardActions, Fab, Icon,Popper, Fade, Divider } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import {URL_IMG} from '../const'
-const styles = {
+
+const styles = theme => ({
   card: {
     maxWidth: 225,
   },
   poster: {
     height: 300,
   },
-}
+  popperCard: {
+    maxWidth: 200
+  },
+  belowDescription: {
+    margin: theme.spacing.unit * 2,
+  }
+})
 
-function MovieCard(props) {
-  const { classes } = props
-  const { poster_path, title } = props.movie
-  return (
-    <Card className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.poster}
-            image={`${URL_IMG}${poster_path}`}
-          />
-        </CardActionArea>
-        <Grid container direction='row' justify='center' alignItems='center' spacing={8}>
-          <Grid item xs={8}>
-            <CardContent>
-              <Typography variant='subheading' align='left' gutterBottom>{title}</Typography>
-            </CardContent>
+class MovieCard extends React.Component {
+
+  state = {
+    anchorEl: null,
+    open: false,
+  }
+
+  handleClick = event => {
+    const { currentTarget } = event;
+    this.setState(state => ({
+      anchorEl: currentTarget,
+      open: !state.open,
+    }))
+  }
+
+  handleMouseOut = () => {
+    this.setState({open: false})
+  }
+
+  render() {
+    const { classes } = this.props
+    const { poster_path, title, overview } = this.props.movie
+
+    return (
+      <Grow in>
+        <Card className={classes.card} >
+          <CardActionArea name="darell" onMouseOut={this.handleMouseOut} onClick={this.handleClick}>
+            <CardMedia
+              className={classes.poster}
+              image={`${URL_IMG}${poster_path}`}
+              />
+          </CardActionArea>
+          <Grid container direction='row' justify='center' alignItems='center' spacing={8}>
+            <Grid item xs={6}>
+              <CardContent>
+                <Typography variant='h6' align='left' gutterBottom>{title}</Typography>
+              </CardContent>
+            </Grid>
+            <Grid item>
+              <CardActions>
+                <Fab size='medium' color="primary" aria-label="Add">
+                  <Icon>add</Icon>
+                </Fab>
+              </CardActions>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <CardActions>
-              <Fab size='medium' color="primary" aria-label="Add">
-                <Icon>add</Icon>
-              </Fab>
-            </CardActions>
-          </Grid>
-        </Grid>
-    </Card>
-  )
+          <Popper
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            transition
+            placement="right"
+            modifiers={{
+              flip: {
+                enabled: true,
+              },
+              preventOverflow: {
+                enabled: true,
+                boundariesElement: 'scrollParent',
+              }}}
+          >
+            {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Card className={classes.popperCard}>
+                <CardContent>
+                  <Typography variant='subtitle1'>Description</Typography>
+                  <Divider variant='middle' className={classes.belowDescription}/>
+                  <Typography variant='caption'>{overview}</Typography>
+                </CardContent>
+              </Card>
+            </Fade>
+          )}
+          </Popper>
+        </Card>
+      </Grow>
+    )
+  }
 }
 
 export default withStyles(styles)(MovieCard)

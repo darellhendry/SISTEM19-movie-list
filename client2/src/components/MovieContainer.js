@@ -2,7 +2,19 @@ import React, {Component} from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import MovieCard from './MovieCard'
 
+
 class MovieContainer extends Component {
+
+
+  // prevent unnecessary rendering
+  shouldComponentUpdate(nextProps) {
+    if (this.props.data === nextProps.data) {
+      return false
+    }
+    return true
+  }
+
+
 
   render() {
     const {data} = this.props
@@ -18,6 +30,7 @@ class MovieContainer extends Component {
                 )
               )
             }
+
             {
               data === undefined && (
                 <Grid item>
@@ -25,6 +38,8 @@ class MovieContainer extends Component {
                 </Grid>
               )
             }
+
+
           </Grid>
         </div>
     )
